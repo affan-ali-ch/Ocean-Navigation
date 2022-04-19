@@ -39,6 +39,7 @@ namespace Ocean_Navigation
             Console.WriteLine("  ***********************************");
             Console.WriteLine("  *     Ocean Navigation System     *");
             Console.WriteLine("  ***********************************");
+            Console.WriteLine();
 
         }
         static int MainMenu()
