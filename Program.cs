@@ -1,13 +1,14 @@
 ﻿using System;
 using Ocean_Navigation.BL;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ocean_Navigation
 {
     internal class Program
     {
         public static List<Ship> ships = new List<Ship>();
-        
+
         static void Main()
         {
             while (true)
@@ -18,13 +19,17 @@ namespace Ocean_Navigation
                 {
                     AddShip();
                 }
-                if(option == 2)
+                if (option == 2)
                 {
                     ViewShipPosition();
                 }
-                if(option == 3)
+                if (option == 3)
                 {
                     ViewSerialNumber();
+                }
+                if (option == 4)
+                {
+                    ChangeShipPositionMenu();
                 }
                 if (option == 5)
                 {
@@ -132,7 +137,7 @@ namespace Ocean_Navigation
 
 
             float Lat_Minute;
-            
+
             Console.Write("  Enter Latitude's Minutes: ");
             try
             {
@@ -149,14 +154,14 @@ namespace Ocean_Navigation
                 Console.ReadKey();
                 return;
             }
-            
+
             Console.Write("  Enter Latitude's Direction: ");
             char Lat_Direction;
             try
             {
                 Lat_Direction = char.Parse(Console.ReadLine());
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -267,7 +272,7 @@ namespace Ocean_Navigation
             Ship ship = new Ship(SerialNumber, Latitude, Longitude);
 
             ships.Add(ship);
-            
+
             Console.WriteLine();
             Console.WriteLine("  Ship Added Successfully !!");
             Console.WriteLine();
@@ -294,15 +299,15 @@ namespace Ocean_Navigation
 
             Console.WriteLine();
 
-            foreach(Ship s in ships)
+            foreach (Ship s in ships)
             {
-                if(s.SerialNumber == ShipSerialNumber)
+                if (s.SerialNumber == ShipSerialNumber)
                 {
                     s.PrintPosition();
                 }
             }
             Console.WriteLine();
-            
+
 
             Console.WriteLine();
             Console.Write("  Press Any Key to Continue...");
@@ -310,7 +315,7 @@ namespace Ocean_Navigation
 
         }
 
-        
+
         static void ViewSerialNumber()
         {
             Console.Clear();
@@ -323,22 +328,162 @@ namespace Ocean_Navigation
 
             Console.WriteLine();
 
-            Console.WriteLine("  Enter The Ship Latitude: ");
+            Console.Write("  Enter The Ship Latitude: ");
             string Latitude = Console.ReadLine();
 
             Console.WriteLine();
 
-            Console.WriteLine("  Enter The Ship Longitude: ");
+            Console.Write("  Enter The Ship Longitude: ");
             string Longitude = Console.ReadLine();
 
             Console.WriteLine();
 
-            Console.WriteLine(Latitude.IndexOf('°'));
 
+            // extract the degree from Latitude
+            string Lat_Degree = Latitude.Substring(0, Latitude.IndexOf('°'));
+            // extract the minutes from Latitude
+            string Lat_Minute = Latitude.Substring(Latitude.IndexOf('°') + 1, Latitude.IndexOf('\'') - Latitude.IndexOf('°') - 1);
+            // extract the direction from latitude
+            string Lat_Direction = Latitude.Substring(Latitude.IndexOf('\'') + 1, 1);
+
+            // extract the degree from Longitude
+            string Long_Degree = Longitude.Substring(0, Longitude.IndexOf('°'));
+            // extract the minutes from Longitude
+            string Long_Minute = Longitude.Substring(Longitude.IndexOf('°') + 1, Longitude.IndexOf('\'') - Longitude.IndexOf('°') - 1);
+            // extract the direction from Longitude
+            string Long_Direction = Longitude.Substring(Longitude.IndexOf('\'') + 1, 1);
+
+            // convert the degree to int
+            int Lat_Degree_Int = int.Parse(Lat_Degree);
+            // convert the minutes to float
+            float Lat_Minute_Float = float.Parse(Lat_Minute);
+            // convert the direction to char
+            char Lat_Direction_Char = char.Parse(Lat_Direction);
+
+            // convert the degree to int
+            int Long_Degree_Int = int.Parse(Long_Degree);
+            // convert the minutes to float
+            float Long_Minute_Float = float.Parse(Long_Minute);
+            // convert the direction to char
+            char Long_Direction_Char = char.Parse(Long_Direction);
+
+
+            // print all values
+            //Console.WriteLine("  Latitude: " + Lat_Degree_Int + "°" + Lat_Minute_Float + "'" + Lat_Direction_Char);
+            //Console.WriteLine("  Longitude: " + Long_Degree_Int + "°" + Long_Minute_Float + "'" + Long_Direction_Char);
+
+            Angle Latitude_Angle = new Angle(Lat_Degree_Int, Lat_Minute_Float, Lat_Direction_Char);
+            Angle Longitude_Angle = new Angle(Long_Degree_Int, Long_Minute_Float, Long_Direction_Char);
+
+            foreach (Ship s in ships)
+            {
+                if (s.Latitude.degrees == Latitude_Angle.degrees && s.Latitude.minutes == Latitude_Angle.minutes && s.Latitude.direction == Latitude_Angle.direction && s.Longitude.degrees == Longitude_Angle.degrees && s.Longitude.minutes == Longitude_Angle.minutes && s.Longitude.direction == Longitude_Angle.direction)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("  Ship Serial Number: " + s.SerialNumber);
+                    Console.WriteLine();
+                }
+
+            }
+
+            Console.WriteLine();
 
             Console.WriteLine();
             Console.Write("  Press Any Key to Continue...");
             Console.ReadKey();
         }
+
+        // change ship position
+        static void ChangeShipPositionMenu()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Header();
+            Console.WriteLine();
+
+            Console.WriteLine("  Main Menu > Change Ship Position > ");
+            Console.WriteLine("  -------------------------------------");
+
+            Console.WriteLine();
+
+            Console.Write("  Enter Ship Serial Number to Change its Position: ");
+            string ShipSerialNumber = Console.ReadLine();
+
+            Console.WriteLine();
+
+            var s = from ship in ships
+                        where ship.SerialNumber == ShipSerialNumber
+                        select ship;
+            
+            if (s.Count() == 0)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("  Ship Not Found !!");
+                Console.ResetColor();
+                Console.WriteLine();
+                Console.Write("  Press Any Key to Continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            // take latitude inputs
+            Console.WriteLine("  Enter Ship Latitude  \x2193  ");
+            Console.Write("  Enter Latitude Degree: ");
+            string Lat_Degree = Console.ReadLine();
+            Console.Write("  Enter Latitude Minutes: ");
+            string Lat_Minute = Console.ReadLine();
+            Console.Write("  Enter Latitude Direction: ");
+            string Lat_Direction = Console.ReadLine();
+
+            // take longitude input
+            Console.WriteLine("  Enter Ship Longitude  \x2193  ");
+            Console.Write("  Enter Longitude Degree: ");
+            string Long_Degree = Console.ReadLine();
+            Console.Write("  Enter Longitude Minutes: ");
+            string Long_Minute = Console.ReadLine();
+            Console.Write("  Enter Longitude Direction: ");
+            string Long_Direction = Console.ReadLine();
+
+            // convert the degree to int
+            int Lat_Degree_Int = int.Parse(Lat_Degree);
+            // convert the minutes to float
+            float Lat_Minute_Float = float.Parse(Lat_Minute);
+            // convert the direction to char
+            char Lat_Direction_Char = char.Parse(Lat_Direction);
+
+            // convert the degree to int
+            int Long_Degree_Int = int.Parse(Long_Degree);
+            // convert the minutes to float
+            float Long_Minute_Float = float.Parse(Long_Minute);
+            // convert the direction to char
+            char Long_Direction_Char = char.Parse(Long_Direction);
+
+            // create new angle
+            Angle Latitude_Angle = new Angle(Lat_Degree_Int, Lat_Minute_Float, Lat_Direction_Char);
+            Angle Longitude_Angle = new Angle(Long_Degree_Int, Long_Minute_Float, Long_Direction_Char);
+
+            // change the ship position
+            s.First().Latitude = Latitude_Angle;
+            s.First().Longitude = Longitude_Angle;
+            
+            
+
+
+            Console.WriteLine();
+
+            Console.WriteLine();
+            Console.Write("  Press Any Key to Continue...");
+            Console.ReadKey();
+
+        }
+
+
+        
+
+
     }
+
+    
+    
 }

@@ -45,11 +45,16 @@
   <ItemGroup>
     <Compile Include="BL\Angle.cs" />
     <Compile Include="BL\Ship.cs" />
+    <Compile Include="DL\ShipDL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Text Files\" />
+    <Folder Include="UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
