@@ -5,25 +5,53 @@ namespace Ocean_Navigation.BL
 {
     internal class Ship
     {
-        public string SerialNumber;
-        public Angle Latitude;
-        public Angle Longitude;
+        private string SerialNumber;
+        private Angle Latitude;
+        private Angle Longitude;
 
-        public Ship(string serialNumber, Angle latitude, Angle longitude)
+        public Ship(string SerialNumber, Angle Latitude, Angle Longitude)
         {
-            SerialNumber = serialNumber;
-            Latitude = latitude;
-            Longitude = longitude;
+            this.SerialNumber = SerialNumber;
+            this.Latitude = Latitude;
+            this.Longitude = Longitude;
         }
 
-        public void PrintPosition()
+        // getSerialNumber
+        public string GetSerialNumber()
         {
-            Console.WriteLine("  Ship is at {0}° {1}' {2} and  {3}° {4}' {5}", Latitude.degrees, Latitude.minutes, Latitude.direction, Longitude.degrees, Longitude.minutes, Longitude.direction);
+            return SerialNumber;
         }
 
-        public void PrintSerial()
+        // getLatitude
+        public Angle GetLatitude()
         {
-            Console.WriteLine("Ship's serial number is {0}", SerialNumber);
+            return Latitude;
         }
+
+        // getLongitude
+        public Angle GetLongitude()
+        {
+            return Longitude;
+        }
+
+        // setSerialNumber
+        public void SetSerialNumber(string SerialNumber)
+        {
+            this.SerialNumber = SerialNumber;
+        }
+
+        // setLatitude
+        public void SetLatitude(Angle Latitude)
+        {
+            this.Latitude = Latitude;
+        }
+
+        // setLongitude
+        public void SetLongitude(Angle Longitude)
+        {
+            this.Longitude = Longitude;
+        }
+
+        
     }
 }
